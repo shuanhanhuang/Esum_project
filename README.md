@@ -10,6 +10,11 @@ use esum;
 # springboot 
 mvn clean install
 
+或是在介面上
+
+maven clean -> maven install
+
+
 # application.properties 檔案
 修改
 
