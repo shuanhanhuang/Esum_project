@@ -13,7 +13,7 @@ use esum;
 
 INSERT INTO user (password, username) VALUES
 ("admin","admin"),
-("esum123","esum123");
+("esum123","esum");
 
 # springboot 
 mvn clean install
