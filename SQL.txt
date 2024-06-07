@@ -1,0 +1,3 @@
+-- esum project
+create database esum;
+use esum;
