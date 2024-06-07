@@ -22,9 +22,9 @@ maven clean -> maven install
 # application.properties 檔案
 修改
 
-spring.datasource.username = 你的帳號
+spring.datasource.username = 你的資料庫帳號
 
-spring.datasource.password = 你的帳號
+spring.datasource.password = 你的資料庫密碼
 
 # shopcontroller、usercontroller、ordercontroller、ordermanagercontroller 檔案
 修改
