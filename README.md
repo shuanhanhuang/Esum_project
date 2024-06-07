@@ -26,10 +26,16 @@ spring.datasource.username = 你的資料庫帳號
 
 spring.datasource.password = 你的資料庫密碼
 
-# shopcontroller、usercontroller、ordercontroller、ordermanagercontroller 檔案
+# shopcontroller、usercontroller、ordercontroller、ordermanagercontroller、Corsconfig 檔案
 修改
 
 @CrossOrigin(origins = "你的網頁網址")
+
+# Corsconfig 檔案
+
+修改
+
+config.addAllowedOrigin("你的網頁網址");
 
 # vue
 npm install
