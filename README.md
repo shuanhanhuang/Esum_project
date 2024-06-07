@@ -11,6 +11,10 @@ create database esum;
 
 use esum;
 
+INSERT INTO user (password, username) VALUES
+("admin","admin"),
+("esum123","esum123");
+
 # springboot 
 mvn clean install
 
