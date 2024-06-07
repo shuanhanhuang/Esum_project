@@ -1,5 +1,4 @@
 # Esum_project
-esum_project
 
 一般使用者帳號/密碼:esum/esum123
 
@@ -7,6 +6,7 @@ esum_project
 
 # 資料庫 MySqL
 -- esum project
+
 create database esum;
 
 use esum;
