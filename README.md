@@ -1,6 +1,8 @@
 # Esum_project
 esum_project
+
 一般使用者帳號/密碼:esum/esum123
+
 管理者帳號/密碼:admin/admin
 
 # 資料庫 MySqL
