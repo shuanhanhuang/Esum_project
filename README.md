@@ -19,7 +19,7 @@ create database esum;
 use esum;
 ```
 
-下方兩段資料庫指令等  java  啟動後再到資料庫輸入
+下方兩SQL指令等  java  啟動後再到資料庫輸入
 ```
 INSERT INTO user (password, username) VALUES
 ("admin","admin"),
