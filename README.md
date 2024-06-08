@@ -49,28 +49,22 @@ npm run dev --5173
 mvn clean install
 ```
 
-或是在java IDE介面上
+或是在java IDE介面上：maven clean -> maven install
 
-maven clean -> maven install
-
-1. application.properties 檔案
-修改
+1. application.properties 檔案 修改
 
 ```
 spring.datasource.username = 你的資料庫帳號
 spring.datasource.password = 你的資料庫密碼
 ```
 
-2. shopcontroller、usercontroller、ordercontroller、ordermanagercontroller 檔案
-修改
+2. shopcontroller、usercontroller、ordercontroller、ordermanagercontroller 檔案 修改
 
 ```
 @CrossOrigin(origins = "你的網頁網址")
 ```
 
-3. Corsconfig 檔案
-
-修改
+3. Corsconfig 檔案 修改
 
 ```
 config.addAllowedOrigin("你的網頁網址");
