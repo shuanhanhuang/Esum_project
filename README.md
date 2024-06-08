@@ -11,7 +11,6 @@
 管理者帳號/密碼：admin/admin
 
 # 資料庫 MySqL
--- esum project
 ```
 create database esum;
 ```
