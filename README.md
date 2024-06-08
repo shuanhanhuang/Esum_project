@@ -10,7 +10,7 @@
 
 管理者帳號/密碼：admin/admin
 
-# 資料庫 MySqL
+# 資料庫 MySQL
 ```
 create database esum;
 ```
