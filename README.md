@@ -57,4 +57,4 @@ config.addAllowedOrigin("你的網頁網址");
 # vue
 npm install
 
-npm run dev
+npm run dev --5173
