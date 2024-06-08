@@ -1,66 +1,69 @@
 <template>
-    <div class="container">
-      <h1>Login</h1>
-      <form @submit.prevent="login" class="form">
-        <div class="form-group">
-          <label for="username" class="form-label">帳號:</label>
-          <input type="text" id="username" v-model="username" class="form-control" required>
-          <div class="form-bar"></div>
-        </div>
-        <div class="form-group">
-          <label for="password" class="form-label">密碼:</label>
-          <input type="password" id="password" v-model="password" class="form-control" required>
-          <div class="form-bar"></div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
-      </form>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'Login',
-    data() {
-      return {
-        username: '',
-        password: ''
-      };
-    },
-    methods: {
-        login() {
-            fetch('http://localhost:8080/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    username: this.username,
-                    password: this.password
-                })
-            })
-            .then(response => {
-                console.log(response);
-                if (response.ok) {
-                    if (this.username === 'admin') {
-                        this.$router.push('/home');
-                    } else if (this.username === 'esum') {
-                        this.$router.push('/shop');
-                    } else {
-                        this.$router.push('/home');
-                    }
-                } else {
-                    alert("登入失敗");
-                    this.username = '';
-                    this.password = '';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+  <div class="container">
+    <h1>Login</h1>
+    <form @submit.prevent="login" class="form">
+      <div class="form-group">
+        <label for="username" class="form-label">帳號:</label>
+        <input type="text" id="username" v-model="username" class="form-control" required>
+        <div class="form-bar"></div>
+      </div>
+      <div class="form-group">
+        <label for="password" class="form-label">密碼:</label>
+        <input type="password" id="password" v-model="password" class="form-control" required>
+        <div class="form-bar"></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'Login',
+  data() {
+    return {
+      username: '',
+      password: ''
+    };
+  },
+  methods: {
+    login() {
+      fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: this.username,
+          password: this.password
+        })
+      })
+      .then(response => {
+        console.log(response);
+        if (response.ok) {
+          // 將用戶名稱存儲到 localStorage
+          localStorage.setItem('currentUser', this.username);
+
+          if (this.username === 'admin') {
+            this.$router.push('/home');
+          } else if (this.username != 'admin') {
+            this.$router.push('/shop');
+          } else {
+            this.$router.push('/home');
+          }
+        } else {
+          alert("登入失敗");
+          this.username = '';
+          this.password = '';
         }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     }
-  };
-  </script>
+  }
+};
+</script>
   
   <style scoped>
   .form {

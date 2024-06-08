@@ -62,7 +62,6 @@ import Navbar from '../components/Navbar.vue'
                 .then(res => res.json())
                 .then(data => {
                     this.products = data
-                    console.log(data)
                 })
             },
             deleteProduct(id){
@@ -70,7 +69,6 @@ import Navbar from '../components/Navbar.vue'
                     method: 'DELETE'
                 })
                 .then(data => {
-                    console.log(data)
                     this.getProducts()
                 })
             }

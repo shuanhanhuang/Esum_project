@@ -34,7 +34,6 @@
 </template>
 
 <script>
-
 import Navbar2 from '../components/Navbar2.vue';
 
 export default {
@@ -49,7 +48,7 @@ export default {
             count: 1,
             standPrice: 0,
             availableQuantities: [],
-            currentUser: null, 
+            currentUser: null,
         }
     },
     watch: {
@@ -64,7 +63,7 @@ export default {
                 itemprice: this.itemPrice,
                 standprice: this.standPrice,
                 count: this.count,
-                mid: "username" 
+                mid: this.currentUser // 使用 this.currentUser 作為 mid 的值
             };
 
             fetch('http://localhost:8080/addOrder', {
@@ -103,30 +102,12 @@ export default {
         },
         calculateStandPrice() {
             this.standPrice = this.itemPrice * this.count;
-        },
-        fetchCurrentUser() {
-            fetch('http://localhost:8080/currentUser', {
-                credentials: 'include'
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('失敗1');
-                }
-            })
-            .then(data => {
-                this.currentUser = data;
-            })
-            .catch(error => {
-                console.error('失敗2:', error);
-            });
         }
     },
     mounted() {
         this.productId = this.$route.query.productId;
         this.fetchProductInfo(this.productId);
-        this.fetchCurrentUser();
+        this.currentUser = localStorage.getItem('currentUser'); // 從 localStorage 獲取 currentUser
     }
 }
 </script>

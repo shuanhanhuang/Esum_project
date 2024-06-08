@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue'
 import Navbar2 from '../components/Navbar2.vue';
 
 export default {
@@ -50,7 +49,8 @@ export default {
     },
     data() {
         return {
-            Orders: []
+            Orders: [],
+            currentUser: null
         }
     },
     computed: {
@@ -58,85 +58,86 @@ export default {
             return this.Orders.reduce((total, order) => total + order.standprice, 0);
         }
     },
-    beforeMount(){
+    beforeMount() {
+        this.getCurrentUser();
         this.getOrders();
     },
     methods: {
+        getCurrentUser() {
+            this.currentUser = localStorage.getItem('currentUser');
+        },
         getOrders() {
             fetch('http://localhost:8080/getOrder')
                 .then(res => res.json())
                 .then(data => {
-                    this.Orders = data;
-                    // console.log(data);
+                    this.Orders = data.filter(order => order.mid === this.currentUser);
                 });
         },
         confirmPurchase() {
-    const orderPids = this.Orders.map(order => order.pid);
-    const oid = this.generateRandomOID();
-    const price = this.totalStandPrice;
+            const orderPids = this.Orders.map(order => order.pid);
+            const oid = this.generateRandomOID();
+            const price = this.totalStandPrice;
 
-    Promise.all(
-        orderPids.map(pid =>
-            fetch(`http://localhost:8080/getProductpid/${pid}`)
-                .then(res => res.json())
-                .then(product => {
-                    const updatedStock = product.quantity - this.Orders.find(order => order.pid === pid).count;
+            Promise.all(
+                orderPids.map(pid =>
+                    fetch(`http://localhost:8080/getProductpid/${pid}`)
+                        .then(res => res.json())
+                        .then(product => {
+                            const updatedStock = product.quantity - this.Orders.find(order => order.pid === pid).count;
 
-                    if (updatedStock >= 0) {
-                        // 更新 Orders 表中对应商品的 quantity 字段
-                        return fetch(`http://localhost:8080/updateOrderQuantity/${pid}?quantity=${updatedStock}`, {
-                            method: 'PUT',
-                            headers: {
-                                'Content-Type': 'application/json'
+                            if (updatedStock >= 0) {
+                                // 更新 Orders 表中对应商品的 quantity 字段
+                                return fetch(`http://localhost:8080/updateProduct/${pid}?quantity=${updatedStock}`, {
+                                    method: 'PUT',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    }
+                                })
+                                .then(() => {
+                                    // 成功更新库存后，删除订单
+                                    const order = this.Orders.find(order => order.pid === pid);
+                                    this.deleteOrder(order.id);
+                                });
+                            } else {
+                                console.error('Insufficient stock for product:', pid);
+                                return Promise.resolve();
                             }
                         })
-                        .then(() => {
-                            console.log(`Successfully updated quantity for product ${pid} in Orders table`);
-                            // 成功更新库存后，删除订单
-                            const order = this.Orders.find(order => order.pid === pid);
-                            this.deleteOrder(order.id);
-                        });
-                    } else {
-                        console.error('Insufficient stock for product:', pid);
-                        return Promise.resolve();
-                    }
+                        .catch(error => {
+                            console.error('Error fetching product data:', error);
+                            return Promise.resolve();
+                        })
+                )
+            )
+            .then(() => {
+                const paystatus = 1;
+
+                const orderManagerData = {
+                    mid: this.currentUser, // 使用当前登录用户的用户名
+                    oid: oid,
+                    price: price,
+                    paystatus: paystatus
+                };
+
+                fetch('http://localhost:8080/addOrdermanager', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderManagerData)
+                })
+                .then(() => {
+                    alert('訂單已送出');
+                    this.$router.push('/shop');
                 })
                 .catch(error => {
-                    console.error('Error fetching product data:', error);
-                    return Promise.resolve();
-                })
-        )
-    )
-    .then(() => {
-        const mid = 'username';
-        const paystatus = 1;
-
-        const orderManagerData = {
-            mid: mid,
-            oid: oid,
-            price: price,
-            paystatus: paystatus
-        };
-
-        fetch('http://localhost:8080/addOrdermanager', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderManagerData)
-        })
-        .then(() => {
-            alert('訂單已送出');
-            this.$router.push('/shop');
-        })
-        .catch(error => {
-            console.error('Error adding ordermanager:', error);
-        });
-    })
-    .catch(error => {
-        console.error('Error updating product stock:', error);
-    });
-},
+                    console.error('Error adding ordermanager:', error);
+                });
+            })
+            .catch(error => {
+                console.error('Error updating product stock:', error);
+            });
+        },
         deleteOrder(id) {
             fetch(`http://localhost:8080/deleteorder/${id}`, {
                 method: 'DELETE'

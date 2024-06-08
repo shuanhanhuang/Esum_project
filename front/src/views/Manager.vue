@@ -58,7 +58,6 @@ import Navbar from '../components/Navbar.vue'
                 .then(res => res.json())
                 .then(data => {
                     this.orders = data
-                    console.log(data)
                 })
             }
         }
